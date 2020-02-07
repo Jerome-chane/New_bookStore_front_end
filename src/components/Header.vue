@@ -23,13 +23,14 @@
           </div>
         </div>
       </div>
-      <addBook />
+      <addBook v-if="person!=null" />
     </div>
   </div>
 </template>
 
 <script>
 import addBook from "./AddBook";
+import { mapGetters } from "vuex";
 export default {
   name: "Header",
   data() {
@@ -45,7 +46,7 @@ export default {
       this.$emit("sendMsg", [this.message, this.selectedLanguage]);
     }
   },
-  computed: {},
+  computed: { ...mapGetters(["person"]) },
   created() {}
 };
 </script>

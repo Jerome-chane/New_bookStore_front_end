@@ -97,8 +97,6 @@ export default new Vuex.Store({
           console.log("Log status", getters.logged);
         })
         .then(newData => {
-          // MUST RETURN THE SIGNED IN AUTHOR SO I CAN SET IT
-          console.log(newData);
           dispatch("getBooks");
         })
         .catch(error => {
@@ -133,37 +131,39 @@ export default new Vuex.Store({
         })
         .catch(error => console.log("Error ", error));
     },
-    addBook({ dispatch }, payload) {
-      let ourBook = {
-        title: payload.title,
-        language: payload.language,
-        description: payload.description,
-        cover: payload.cover,
-        detail: payload.detail
-      };
-      console.log(JSON.stringify(ourBook));
+    addBook({ dispatch, getters }, payload) {
+      if (getters.person != null) {
+        let ourBook = {
+          title: payload.title,
+          language: payload.language,
+          description: payload.description,
+          cover: payload.cover,
+          detail: payload.detail
+        };
+        console.log(JSON.stringify(ourBook));
 
-      fetch(`/api/addBook`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        method: "POST",
-        body: JSON.stringify(ourBook)
-      })
-        .then(newData => {
-          // console.log(newData);
-          return newData.json();
+        fetch(`/api/addBook`, {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          method: "POST",
+          body: JSON.stringify(ourBook)
         })
-        .then(data => {
-          // console.log(data);
-          if (data.success) {
-            dispatch("getBooks");
-          }
-        })
-        .catch(error => {
-          console.log("Request failure: ", error);
-        });
+          .then(newData => {
+            // console.log(newData);
+            return newData.json();
+          })
+          .then(data => {
+            // console.log(data);
+            if (data.success) {
+              dispatch("getBooks");
+            }
+          })
+          .catch(error => {
+            console.log("Request failure: ", error);
+          });
+      } else console.log("You must be an author to add a book");
     },
     getBooks({ commit }) {
       fetch(`api/books`, {
