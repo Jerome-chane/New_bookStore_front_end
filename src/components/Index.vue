@@ -3,7 +3,7 @@
     <login />
 
     <Header @sendMsg="getMsg" />
-    <!-- <p v-if="books.length === 0" class="loader"></p> -->
+    <p v-if="books.length === 0" class="loader"></p>
     <p class="alert alert-warning" v-if="books.length > 0 && filtered.length === 0">No match Found</p>
 
     <Book @allBooks="getBooks" :filteredArray="filtered" />
@@ -24,7 +24,6 @@ export default {
       search: "",
       language: "",
       filtered: []
-      // books: []
     };
   },
   watch: {

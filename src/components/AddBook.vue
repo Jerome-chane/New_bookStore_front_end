@@ -33,6 +33,15 @@
               minlength="3"
             />
           </span>
+          <span>
+            Price:
+            <input
+              type="number"
+              placeholder="Price..."
+              v-model="book.price"
+              required="required"
+            />
+          </span>
 
           <span>
             Cover:
@@ -43,6 +52,7 @@
             Detail:
             <input placeholder="detail(optional)" v-model="book.detail" />
           </span>
+
           <!-- <p
             v-if="bookAlreadyExist"
             class="alert alert-info"
@@ -66,15 +76,14 @@ export default {
         language: "",
         description: "",
         cover: "",
-        detail: ""
+        detail: "",
+        price: 0
       },
       Form: false
     };
   },
   methods: {
     addBook() {
-      console.log(this.book);
-
       this.$store.dispatch("addBook", this.book);
     },
     showForm() {

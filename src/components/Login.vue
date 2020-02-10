@@ -80,6 +80,12 @@
               minlength="3"
             />
           </span>
+          <select class="custom-select-sm" v-model="user.role">
+            <!-- <option value>All languages</option> -->
+            <option value="customer">Customer</option>
+            <option value="author">Author</option>
+            <!-- <option value="ca">Catalan</option> -->
+          </select>
           <p
             v-if="userAlreadyExist"
             class="alert alert-info"
@@ -124,6 +130,7 @@ export default {
         lastName: "",
         userName: "",
         email: "",
+        role: "customer",
         password: ""
       },
       s: false

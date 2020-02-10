@@ -1,30 +1,25 @@
 <template>
   <div class="container head">
-    <div id="header" class="justify-content-around">
-      <div class="row">
-        <div id="logo" class="col-6">
-          <img class="logo" alt="book logo" src="../assets/book.png" />
-        </div>
-        <div class="col-6" id="search-bar">
-          <div class="search-bar">
-            <input
-              id="input"
-              type="text"
-              v-model="message"
-              v-on:keyup="emitToApp"
-              placeholder="Search for title or description..."
-            />
-            <select class="custom-select-sm" v-model="selectedLanguage" v-on:change="emitToApp">
-              <option value>All languages</option>
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="ca">Catalan</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <addBook v-if="person!=null" />
+    <div class="logos">
+      <img class="logo" alt="book logo" src="../assets/book.png" />
+      <img class="cart" @click="goToCart" src="../assets/cart.png" />
     </div>
+    <div class="search-bar">
+      <input
+        id="input"
+        type="text"
+        v-model="message"
+        v-on:keyup="emitToApp"
+        placeholder="Search for title or description..."
+      />
+      <select class="custom-select-sm" v-model="selectedLanguage" v-on:change="emitToApp">
+        <option value>All languages</option>
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="ca">Catalan</option>
+      </select>
+    </div>
+    <addBook v-if="person != null && person.role == 'author'" />
   </div>
 </template>
 
@@ -42,6 +37,9 @@ export default {
   props: ["filter"],
   components: { addBook },
   methods: {
+    goToCart() {
+      this.$router.push("cart");
+    },
     emitToApp() {
       this.$emit("sendMsg", [this.message, this.selectedLanguage]);
     }
@@ -53,6 +51,16 @@ export default {
 
 
 <style scoped>
+.logos {
+  display: flex;
+  justify-content: space-between;
+}
+.cart {
+  height: 83px;
+  width: 83px;
+  border-radius: 7px;
+  margin-top: 1%;
+}
 .logo {
   height: 90px;
   width: 280px;
@@ -62,13 +70,15 @@ export default {
   display: flex;
   border-radius: 13px;
   height: 55%;
-  width: 100%;
+  /* width: 100%; */
   margin-top: 2%;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .search-bar input {
-  width: 100%;
+  /* width: 100%; */
+  height: 25px;
+  margin-right: 6px;
 }
 
 .search-bar button {

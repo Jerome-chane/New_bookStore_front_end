@@ -1,20 +1,22 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  // plugins: [createPersistedState()], // create a persistent state so when page reload data is still here
   state: {
     person: null,
     showLoginForm: false,
     logged: false,
     userAlreadyExist: false,
     books: [],
-
+    cart: [],
     email: "",
     pwd: ""
   },
   getters: {
+    cart: state => state.cart,
     books: state => state.books,
     author: state => state.author,
     logged: state => state.logged,
@@ -25,6 +27,21 @@ export default new Vuex.Store({
     password: state => state.pwd
   },
   mutations: {
+    removeItem: (state, payload) => {
+      state.cart.splice(payload, 1);
+    },
+    addToCart: (state, payload) => {
+      state.cart.push({
+        id: payload.id,
+        title: payload.title,
+
+        cover: payload.cover,
+
+        price: payload.price
+      });
+      // state.cart.push(payload);
+      console.log("cart updated ", state.cart);
+    },
     setBooks: (state, payload) => (state.books = payload),
     syncEmail: (state, payload) => (state.email = payload),
     syncPwd: (state, payload) => (state.pwd = payload),
@@ -48,8 +65,10 @@ export default new Vuex.Store({
         lastName: payload.lastName,
         userName: payload.userName,
         email: payload.email,
+        role: payload.role,
         password: payload.password
       };
+      console.log("FETCH SEENT", `api/signup/${payload.userType}`);
 
       fetch(`api/signup`, {
         credentials: "include",
@@ -73,7 +92,7 @@ export default new Vuex.Store({
             commit("setLoginForm", false);
             dispatch("login");
             console.log(data);
-            commit("setAuthor", ourData); // TEMPORARY HERE. Set the Author in the Store when Author has signed up
+            commit("setPerson", ourData); // TEMPORARY HERE. Set the Author in the Store when Author has signed up
           }
         })
         .catch(error => {
@@ -138,7 +157,8 @@ export default new Vuex.Store({
           language: payload.language,
           description: payload.description,
           cover: payload.cover,
-          detail: payload.detail
+          detail: payload.detail,
+          price: payload.price
         };
         console.log(JSON.stringify(ourBook));
 
@@ -155,7 +175,7 @@ export default new Vuex.Store({
             return newData.json();
           })
           .then(data => {
-            // console.log(data);
+            console.log(data);
             if (data.success) {
               dispatch("getBooks");
             }
@@ -180,6 +200,26 @@ export default new Vuex.Store({
           if (newData.logged != null) {
             commit("setPerson", newData.logged);
           }
+        })
+        .catch(error => console.log(error));
+    },
+    buy({ getters }) {
+      let data = getters.cart;
+      console.log(JSON.stringify(data));
+
+      fetch(`purchase`, {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+        .then(data => {
+          return data.json();
+        })
+        .then(newData => {
+          console.log(newData);
         })
         .catch(error => console.log(error));
     }

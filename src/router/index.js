@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Index from "../components/Index";
-
+import Cart from "../components/Cart";
 Vue.use(VueRouter);
 
 const routes = [
@@ -9,12 +9,12 @@ const routes = [
     path: "/",
     name: "index",
     component: Index
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: Cart
   }
-  // {
-  //   path: "/",
-  //   name: "home",
-  //   component: Home
-  // },
   // {
   // path: "/about",
   // name: "about",

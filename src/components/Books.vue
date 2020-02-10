@@ -4,26 +4,28 @@
       <div class="gallery">
         <div
           class="gallery-panel flip_container"
-          v-for="cover in filteredArray"
-          v-bind:key="cover.id"
+          v-for="book in filteredArray"
+          v-bind:key="book.id"
         >
           <div class="flip">
             <div class="flip_front">
               <div class="card">
                 <div class>
-                  <img id="img" v-bind:src="cover.cover" class="card-img-top" />
+                  <img id="img" v-bind:src="book.cover" class="card-img-top" />
                 </div>
               </div>
             </div>
             <div class="flip_back">
               <div class="card">
                 <div class="back">
-                  <h3>{{cover.title}}</h3>
-                  <p>{{cover.description}}</p>
-                  <a data-fancybox="gallery" class="button" :href="cover.detail">
+                  <h3>{{book.title}}</h3>
+                  <p>{{book.description}}</p>
+                  <a data-fancybox="gallery" class="button" :href="book.detail">
                     View
-                    <img :src="cover.detail" />
+                    <img :src="book.detail" />
                   </a>
+                  <p class="alert price">{{book.price}}€</p>
+                  <p class="btn btn-warning" @click="addToCart(book)">Add to Cart</p>
                 </div>
               </div>
             </div>
@@ -36,18 +38,27 @@
 
 <script>
 import msgTest from "./Header";
+import { mapGetters } from "vuex";
 export default {
   name: "Books",
   props: ["filteredArray"], // coming from App
   data() {
-    return {
-      books: []
-    };
+    return {};
   },
   components: {
     msgTest
   },
+  computed: {
+    ...mapGetters(["person", "cart"])
+  },
   methods: {
+    addToCart(book) {
+      if (this.cart.every(item => (item.id == book.id ? false : true))) {
+        // check if the book is already in the cart or not IF not book will be added
+        this.$store.commit("addToCart", book);
+        console.log("added to card");
+      } else alert("book already in Cart");
+    }
     // getData() {
     //   //   fetch("https://api.myjson.com/bins/zyv02")
     //   fetch("api/books")
@@ -74,6 +85,11 @@ export default {
 </script>
 
 <style>
+.price {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
